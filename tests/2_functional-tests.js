@@ -1,16 +1,15 @@
 const chaiHttp = require('chai-http');
 const chai = require('chai');
 const assert = chai.assert;
-const server = require('../server');
-
 chai.use(chaiHttp);
+const server = require('../server');
 
 suite('Functional Tests', function() {
   test('Create an issue with every field: POST request to /api/issues/{project}', function (done) {
       chai
         .request(server)
         .keepOpen()
-        .post('/api/issues/apitest')
+        .post('/api/issues/test10')
         .send({
           issue_title: 'test',
           issue_text: 'test',
@@ -33,7 +32,7 @@ suite('Functional Tests', function() {
       chai
         .request(server)
         .keepOpen()
-        .post('/api/issues/apitest')
+        .post('/api/issues/test10')
         .send({
           issue_title: 'test',
           issue_text: 'test',
@@ -69,22 +68,23 @@ suite('Functional Tests', function() {
     });
   
   test('View issues on a project: GET request to /api/issues/{project}', function (done) {
-      chai
-        .request(server)
-        .keepOpen()
-        .get('/api/issues/apitest')
-        .end(function (err, res) {
-          assert.equal(res.status, 200);
-          assert.isArray(res.body);
-          assert.equal(res.body.length, 2);
-          done();
-        });
-    });
+    chai
+      .request(server)
+      .keepOpen()
+      .get('/api/issues/test10')
+      .end(function (err, res) {
+        assert.equal(res.status, 200);
+        assert.isArray(res.body);
+        assert.equal(res.body.length, 2);
+        done();
+      });
+});
+
   test('View issues on a project with one filter: GET request to /api/issues/{project}', function (done) {
       chai
         .request(server)
         .keepOpen()
-        .get('/api/issues/apitest?assigned_to=test')
+        .get('/api/issues/test10?assigned_to=test')
         .end(function (err, res) {
           assert.equal(res.status, 200);
           assert.isArray(res.body);
@@ -96,7 +96,7 @@ suite('Functional Tests', function() {
       chai
         .request(server)
         .keepOpen()
-        .get('/api/issues/apitest?assigned_to=test&status_text=test')
+        .get('/api/issues/test10?assigned_to=test&status_text=test')
         .end(function (err, res) {
           assert.equal(res.status, 200);
           assert.isArray(res.body);
@@ -108,16 +108,16 @@ suite('Functional Tests', function() {
       chai
         .request(server)
         .keepOpen()
-        .put('/api/issues/apitest')
+        .put('/api/issues/test_fixed')
         .send({
-          _id: 1,
+          _id: '645c2318df1c030437cdab61',
           issue_title: 'updated'
         })
         .end(function (err, res) {
           assert.equal(res.status, 200);
           assert.equal(res.type, 'application/json');
           assert.equal(res.body.result, 'successfully updated');
-          assert.equal(res.body._id, 1);
+          assert.equal(res.body._id, '645c2318df1c030437cdab61');
           done();
         });
     });
@@ -125,9 +125,9 @@ suite('Functional Tests', function() {
       chai
         .request(server)
         .keepOpen()
-        .put('/api/issues/apitest')
+        .put('/api/issues/test_fixed')
         .send({
-          _id: 2,
+          _id: '645c2318df1c030437cdab61',
           issue_title: 'updated',
           issue_text: 'updated',
           created_by: 'updated'
@@ -136,7 +136,7 @@ suite('Functional Tests', function() {
           assert.equal(res.status, 200);
           assert.equal(res.type, 'application/json');
           assert.equal(res.body.result, 'successfully updated');
-          assert.equal(res.body._id, 2);
+          assert.equal(res.body._id, '645c2318df1c030437cdab61');
           done();
         });
     });
@@ -159,9 +159,9 @@ suite('Functional Tests', function() {
       chai
         .request(server)
         .keepOpen()
-        .put('/api/issues/apitest')
+        .put('/api/issues/test_fixed')
         .send({
-          _id: 2,
+          _id: '645c2318df1c030437cdab61',
           issue_title: '',
           issue_text: '',
           created_by: ''
@@ -170,7 +170,7 @@ suite('Functional Tests', function() {
           assert.equal(res.status, 200);
           assert.equal(res.type, 'application/json');
           assert.equal(res.body.error, 'no update field(s) sent');
-          assert.equal(res.body._id, 2);
+          assert.equal(res.body._id, '645c2318df1c030437cdab61');
           done();
         });
     });
@@ -180,14 +180,14 @@ suite('Functional Tests', function() {
         .keepOpen()
         .put('/api/issues/apitest')
         .send({
-          _id: 555,
+          _id: '645c2318df1c0304dab61',
           issue_title: 'updated'
         })
         .end(function (err, res) {
           assert.equal(res.status, 200);
           assert.equal(res.type, 'application/json');
           assert.equal(res.body.error, 'could not update');
-          assert.equal(res.body._id, 555);
+          assert.equal(res.body._id, '645c2318df1c0304dab61');
           done();
         });
     });
@@ -197,13 +197,13 @@ suite('Functional Tests', function() {
         .keepOpen()
         .delete('/api/issues/apitest')
         .send({
-          _id: 1
+          _id: '645c2edd2171fb302a375888'
         })
         .end(function (err, res) {
           assert.equal(res.status, 200);
           assert.equal(res.type, 'application/json');
           assert.equal(res.body.result, 'successfully deleted');
-          assert.equal(res.body._id, 1);
+          assert.equal(res.body._id, '645c2edd2171fb302a375888');
           done();
         });
     });
