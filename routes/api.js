@@ -125,12 +125,16 @@ module.exports = function (app) {
           { _id: _id, project: project },
           { $set: { ...body }, updated_on: new Date() }
         )
-        .then((result) => {
-          return res.json({ result: 'successfully updated', '_id': _id });
-        })
-        .catch((error) => {
-          return res.json({ error: 'could not update', '_id': _id });
-        });        
+          .then((result) => {
+            if (result.nModified === 0) {
+              return res.json({ error: 'could not update', '_id': _id });
+            }
+            return res.json({ result: 'successfully updated', '_id': _id });
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+
       } else {
         return res.json({ error: 'missing _id' });
       }
@@ -142,14 +146,17 @@ module.exports = function (app) {
 
       if (_id) {
         issueModel.deleteOne({ _id: _id, project: project })
-          .then((res) => {
-            res.json({ result: 'successfully deleted', '_id': _id });
+          .then((result) => {
+            if (result.deletedCount != 1) {
+              return res.json({ error: 'could not delete', '_id': _id });
+            }
+            return res.json({ result: 'successfully deleted', '_id': _id });
           })
           .catch((error) => {
-            res.json({ error: 'could not delete', '_id': _id });
+            console.log(error);
           });
       } else {
-        res.json({ error: 'missing _id' });
+        return res.json({ error: 'missing _id' });
       }
     });  
 };
